@@ -1,19 +1,19 @@
 # Site Settings
-title: Jekflix | A theme for Jekyll
-email: youremail@xyz.com
+title: KOO's blog | Develop blog
+email: nevergiveup936@gmail.com
 description: Some text about your blog.
 # baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://KOOSANGYOON.github.io" # the base hostname & protocol for your site
-google_analytics: "UA-XXXXXXXX-X"
+google_analytics: "UA-111886516-1"
 
 # User Settings
-username: Jekflix
+username: KOO's blog
 user_description: Some text about you.
 disqus_username: disqus_username
 
 # Social Media
 # Remove the item if you don't need it
-github_username: github_username
+github_username: KOOSANGYOON
 facebook_username: facebook_username
 twitter_username: twitter_username
 instagram_username: instagram_username
