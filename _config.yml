@@ -8,8 +8,8 @@ google_analytics: "UA-111886516-1"
 
 # User Settings
 username: KOO's blog
-user_description: Some text about you.
-disqus_username: disqus_username
+user_description: 개발자를 향해 노력하는 KOO 입니다.
+disqus_username: KOO
 
 # Social Media
 # Remove the item if you don't need it
