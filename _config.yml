@@ -40,6 +40,5 @@ links:
     url: /contact/
   - title: TIL
     url: /TIL/
-
 # Exclude my node related stuff
 exclude: ['package.json', 'src', 'node_modules']
