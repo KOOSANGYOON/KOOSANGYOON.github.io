@@ -1,7 +1,7 @@
 # Site Settings
 title: KOO's blog | Develop blog
 email: nevergiveup936@gmail.com
-description: Some text about your blog.
+description: Koo's developing diary
 # baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://KOOSANGYOON.github.io" # the base hostname & protocol for your site
 google_analytics: "UA-111886516-1"
@@ -38,6 +38,8 @@ links:
     url: /about/
   - title: Contact
     url: /contact/
+  - title: TIL
+    url: /TIL/
 
 # Exclude my node related stuff
 exclude: ['package.json', 'src', 'node_modules']
