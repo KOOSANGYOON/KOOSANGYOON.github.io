@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "JAVA 인터페이스/추상클래스/final"
-date: 2018-01-08 13:50:25
+date: 2018-01-05 11:30:40
 image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/abstract.jpg?raw=true'
 description: TIL
 category: 'TIL'
