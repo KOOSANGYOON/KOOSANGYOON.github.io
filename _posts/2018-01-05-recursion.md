@@ -144,7 +144,7 @@ SPARE처리가 된 점수를 계산하는 것은 frames 객체가 담당할 수 
 4. 재귀를 이용한 후의 코드의 변화
 
  - 처음 코드를 짰을 때에 frames 클래스에서 아래와 같이 구현되었다.
-
+ 
 ```java
    fillTotalScoreBoard(ArrayList<ArrayList<Integer>> result) {
   		for (int i = 0; i < result.size(); i++) {
@@ -163,7 +163,7 @@ SPARE처리가 된 점수를 계산하는 것은 frames 객체가 담당할 수 
   		return result;
   	}
    }
-  ```
+```
 > 코드를 보면 알 수 있듯이 너무나도 유지보수하기 힘든 코드다..
 
 > 잠시 흡연을 하고 돌아오니 코딩한 나 자신 조차도 코드를 이해하기 힘들었다..
