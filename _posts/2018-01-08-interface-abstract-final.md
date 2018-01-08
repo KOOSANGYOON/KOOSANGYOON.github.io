@@ -3,7 +3,7 @@ layout: post
 title: "JAVA 인터페이스/추상클래스/final"
 date: 2018-01-05 11:30:40
 image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/abstract.jpg?raw=true'
-description: TIL
+description: TIL (추상클래스를 학습해서 추상화를 넣어봤어 ..)
 category: 'TIL'
 tags:
 - TIL
@@ -78,14 +78,14 @@ JAVA BOWLING 과제를 더욱 깔끔하고 간결하게 수행하기 위해서 `
  - 인터페이스는 `생성자` 로 사용될 수 없다.
    (컴파일러 에러 발생)
 
-  ```java
+   ```java
    interfaceName classOne = new interfaceName();
-  ```
+   ```
   > 이렇게 사용할 수 없다.
 
-  ```java
+    ```java
   interfaceName classOne = new CLASS1();
-  ```
+    ```
   > 이렇게 사용 가능하다. (CLASS1은 interfaceName을 인터페이스하는 클래스이다. 활용예시 참고)
 
 #### 3) abstract class
@@ -151,7 +151,6 @@ abstract class 역시 마음대로 초기화하고 실행할 수 없다.
   ```
 
  > final 클래스는 상속을 해 줄 수 없다.
-
   ```java
   public class class2 extends class1 {
     ...
@@ -200,6 +199,5 @@ POBI (박재상 님)가 이번 bowling 과제가 아니면 추상 클래스와 �
 ---
 ### 4. 학습 자료 출처
 
-- 출처 :
-
- {저자 = 이상민 | 발행일 : 2013.02.28 | 제목 = 《자바의 神 VOL. 1 (기초 문법편)》 | 출판사 : 로드북 }
+- 출처
+{저자 = 이상민 | 발행일 : 2013.02.28 | 제목 = 《자바의 神 VOL. 1 (기초 문법편)》 | 출판사 : 로드북 }
