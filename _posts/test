@@ -1,21 +1,18 @@
 ---
 layout: post
-title: "JAVA 인터페이스/추상클래스/final"
-date: 2018-01-05 11:30:40
-image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/abstract.jpg?raw=true'
-description: TIL (추상클래스를 학습해서 추상화를 넣어봤어 ..)
+title: "SPARK.JAVA 의 기초"
+date: 2018-01-10 17:22:34
+image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/spark.jpg?raw=true'
+description: SPARK.JAVA 의 기초 학습
 category: 'TIL'
 tags:
 - TIL
 - CODING
-- INTERFACE
-- ABSTRACT CLASS
-- FINAL
+- SPARK
 - JAVA
-twitter_text: 인터페이스/추상클래스/final 학습
-introduction: 인터페이스/추상클래스/final 학습
+twitter_text: SPARK.JAVA 의 기초 학습
+introduction: SPARK.JAVA 의 기초 학습
 ---
-
 # (2018.01.10)
 
 ## TIL
