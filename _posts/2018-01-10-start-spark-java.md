@@ -144,61 +144,61 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  ---
 #### 1-7) 동적인 화면 구성하기 (template engine)
 
- - 기존의 main 문은 아래와 같았다.
- ```java
- public class HelloWorld {
- 	public static void main(String[] args) {
- 		staticFiles.location("/static");
+- 기존의 main 문은 아래와 같았다.
+```java
+public class HelloWorld {
+    public static void main(String[] args) {
+    staticFiles.location("/static");
 
- 		post("/hello", (req, res) -> {
- 			return "get Hello " + req.queryParams("name") + " 나이는 " + req.queryParams("age");
- 		});
- 	}
- }
- ```
+    post("/hello", (req, res) -> {
+      return "get Hello " + req.queryParams("name")
+              + " 나이는 " + req.queryParams("age");
+      });
+    }
+}
+```
 
- - 이를 동적인 정보를 받아오는 html 창으로 변경하기 위해서는 첫번째로 직접 타이핑할 수 있다.
- ```java
- //example 1
- public class HelloWorld {
- 	public static void main(String[] args) {
- 		staticFiles.location("/static");
+- 이를 동적인 정보를 받아오는 html 창으로 변경하기 위해서는 첫번째로 직접 타이핑할 수 있다.
+```java
+//example 1
+public class HelloWorld {
+  public static void main(String[] args) {
+    staticFiles.location("/static");
+    post("/hello", (req, res) -> {
+      return "<html>" +
+            "<body>" +
+            "<h1>회원 가입 결과</h1>" +
+            "이름 : " + req.queryParams("name") +
+            "<br /><br />" +
+            "나이 : " + req.queryParams("age") +
+            "</body>" +
+            "</html>";
+          });
+  }
+}
+```
 
- 		post("/hello", (req, res) -> {
- 			return "<html>" +
- 					"<body>" +
- 					"<h1>회원 가입 결과</h1>" +
- 					"이름 : " + req.queryParams("name") +
- 					"<br /><br />" +
- 					"나이 : " + req.queryParams("age") +
- 					"</body>" +
- 					"</html>";
- 		});
- 	}
- }
- ```
+- 하지만 너무 하드코딩이다.. (코드가 길어지면 답이 없다..) 이럴 때는 템플릿 엔진을 이용하면 된다.
 
- - 하지만 너무 하드코딩이다.. (코드가 길어지면 답이 없다..) 이럴 때는 템플릿 엔진을 이용하면 된다.
-
-  - 먼저 sparkjava 홈페이지에서 handlebars 템플릿 엔진을 찾는다.
-  ```sts
+- 먼저 sparkjava 홈페이지에서 handlebars 템플릿 엔진을 찾는다.
+```sts
   <dependency>
      <groupId>com.sparkjava</groupId>
      <artifactId>spark-template-handlebars</artifactId>
      <version>2.7.1</version>
   </dependency>
-  ```
-  여기서 `groupId` 와 `artifactId` 를 gradle 파일의 `dependencies` 에 복사해준다.
-  ```java
+```
+여기서 `groupId` 와 `artifactId` 를 gradle 파일의 `dependencies` 에 복사해준다.
+```java
   dependencies {
  	compile "com.sparkjava:spark-core:2.7.1"
  	compile "com.sparkjava:spark-template-handlebars:2.7.1"
   }
-  ```
-  그 후에 gradle 파일을 우클릭한 후, refresh를 해주면, project and external dependencies 안에 template-handlebars 가 생성된 것을 확인할 수 있다.
+```
+그 후에 gradle 파일을 우클릭한 후, refresh를 해주면, project and external dependencies 안에 template-handlebars 가 생성된 것을 확인할 수 있다.
 
-  - 다음으로 helloWorld 파일을 수정한다. (render 메서드의 소스는 spark java에서 구할 수 있다.)
-    ```java
+- 다음으로 helloWorld 파일을 수정한다. (render 메서드의 소스는 spark java에서 구할 수 있다.)
+```java
     import static spark.Spark.*;
 
     import java.util.HashMap;
@@ -220,13 +220,15 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
     		});
     	}
 
-    	public static String render(Map<String, Object> model, String templatePath) {
-    	    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+    	public static String render(Map<String, Object> model,
+                                    String templatePath) {
+    	    return new HandlebarsTemplateEngine().render(new
+           ModelAndView(model, templatePath));
     	}
     }
-    ```
-  - 마지막으로 result.html 을 수정한다.
-    ```html
+```
+- 마지막으로 result.html 을 수정한다.
+```html
     <!DOCTYPE html>
     <html>
     <head>
@@ -241,44 +243,43 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
     나이 : {{age}}
     </body>
     </html>
-    ```
-  > 여기서 `{{. . .}}` 는 helloworld 에서 name 이름에 해당하는 값을 받아옴을 의미한다.
+```
+> 여기서 `중괄호 두개 사이` 의 name 은 helloworld 에서 name 이름에 해당하는 값을 받아옴을 의미한다.
 
-  - 수정 후에 resource 폴더 안에 templates 폴더를 만들어 주고, result.html을 이동시킨다.
-  (default 값이 가르키는 곳이 resource -> templates 이다.)
+- 수정 후에 resource 폴더 안에 templates 폴더를 만들어 주고, result.html을 이동시킨다.
+(default 값이 가르키는 곳이 resource -> templates 이다.)
 
  ---
 #### 1-8) 여러개의 동적 값을 출력하기
 
- 여러개의 값을 출력하기 이전에 자바의 문법에 대해 알아야 한다.
- 예를들어 아래와 같이 User class를 만들었다고 하자.
+여러개의 값을 출력하기 이전에 자바의 문법에 대해 알아야 한다.
+예를들어 아래와 같이 User class를 만들었다고 하자.
+  ```java
+  public class User {
+    private String name;
+   	private String age;
 
- ```java
- public class User {
- 	private String name;
- 	private String age;
+   	public String getName() {
+   		return name;
+   	}
 
- 	public String getName() {
- 		return name;
- 	}
+   	public void setName(String name) {
+   		this.name = name;
+   	}
 
- 	public void setName(String name) {
- 		this.name = name;
- 	}
+   	public String getAge() {
+   		return age;
+   	}
 
- 	public String getAge() {
- 		return age;
- 	}
+   	public void setAge(String age) {
+   		this.age = age;
+   	}
 
- 	public void setAge(String age) {
- 		this.age = age;
- 	}
+   }
+  ```
+그리고 main 에서 user들을 모아두는 list를 만들어서 관리한다고 하자.
 
- }
- ```
- 그리고 main 에서 user들을 모아두는 list를 만들어서 관리한다고 하자.
-
- ```java
+```java
  public class UserMain {
  	public static void main(String[] args) {
  		staticFiles.location("/static");
@@ -300,12 +301,12 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  	    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
  	}
  }
- ```
- 그리고 나서 html문서에 user가 아닌, users (List)를 보내서 결과를 얻고싶다.
+```
+그리고 나서 html문서에 user가 아닌, users (List)를 보내서 결과를 얻고싶다.
 
- html 에서 user 의 name 에 접근하려고 할 때, 이렇게 사용할 것이다.
+html 에서 user 의 name 에 접근하려고 할 때, 이렇게 사용할 것이다.
 
- ```html
+```html
  <!DOCTYPE html>
  <html>
  <head>
@@ -320,17 +321,17 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  {{/users}}
  </body>
  </html>
- ```
+```
 
- 일단 첫째로, 위와같이 코드를 작성한다면, List 내에 있는 모든 user들의 정보가
- for문을 돌듯이 출력되어 나온다. (한명이 아닌 전체가) 이 문법을 기억하자.
+일단 첫째로, 위와같이 코드를 작성한다면, List 내에 있는 모든 user들의 정보가
+for문을 돌듯이 출력되어 나온다. (한명이 아닌 전체가) 이 문법을 기억하자.
 
- 두번째로, 중괄호 사이에 있는 name 과 age 는 과연 User 클래스의 인스턴스 변수일까?
+두번째로, 중괄호 사이에 있는 name 과 age 는 과연 User 클래스의 인스턴스 변수일까?
 
- > 정답은 `X` 다.
+> 정답은 `X` 다.
 
- 여기서 name과 age는 인스턴스 변수에 직접 접근하는것이 아닌, getName() 과 getAge() 내에 있는 name 과 age 이다.
- 이는 자바의 기본 문법이므로 숙지해야겠다.
+여기서 name과 age는 인스턴스 변수에 직접 접근하는것이 아닌, getName() 과 getAge() 내에 있는 name 과 age 이다.
+이는 자바의 기본 문법이므로 숙지해야겠다.
 
 ---
 
