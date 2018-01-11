@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "SPARK.JAVA 기초 학습"
-date: 2018-01-10 17:32:45
+title: "SPARK JAVA 의 기초 학습"
+date: 2018-01-10 17:32:40
 image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/spark.jpg?raw=true'
-description: TIL (SPARK 가 일어나는 불 꽃 놀 이)
+description: TIL (SPARK 가 튀는 불꽃놀이)
 category: 'TIL'
 tags:
 - TIL
 - CODING
 - SPARK
 - JAVA
-twitter_text: SPARK.JAVA 기초 학습
-introduction: SPARK.JAVA 기초 학습
+twitter_text: SPARK.JAVA 의 기초 학습
+introduction: SPARK.JAVA 의 기초 학습
 ---
 
 # (2018.01.10)
@@ -114,7 +114,7 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  주소창에 `localhost:4567/hello?name=koo&age=20` 과 같이 `&(앤드)` 연산자를 주소창에 넣어서 사용이 가능하다.
 
  ---
- #### 1-6) `html 파일 생성 / UI 생성` 과 `post() 로 서버에 데이터 전달하기`
+#### 1-6) `html 파일 생성 / UI 생성` 과 `post() 로 서버에 데이터 전달하기`
  - post() 방식이 왜 필요한가?
   - 기존의 get() 방식을 이용하면, 개인의 입력 정보들(ex. 이름, 나이, 아이디 등)이 url에 모두 표기가 된다.
   > localhost:4567/hello/name=koo&age=29
@@ -142,7 +142,7 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  ## ※ *추후 get() 방식과 post() 방식의 차이점에 대해 학습 필요!*
 
  ---
- #### 1-7) 동적인 화면 구성하기 (template engine)
+#### 1-7) 동적인 화면 구성하기 (template engine)
 
  - 기존의 main 문은 아래와 같았다.
  ```java
@@ -248,7 +248,7 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
   (default 값이 가르키는 곳이 resource -> templates 이다.)
 
  ---
- #### 1-8) 여러개의 동적 값을 출력하기
+#### 1-8) 여러개의 동적 값을 출력하기
 
  여러개의 값을 출력하기 이전에 자바의 문법에 대해 알아야 한다.
  예를들어 아래와 같이 User class를 만들었다고 하자.
@@ -276,7 +276,6 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
 
  }
  ```
-
  그리고 main 에서 user들을 모아두는 list를 만들어서 관리한다고 하자.
 
  ```java
@@ -302,7 +301,6 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  	}
  }
  ```
-
  그리고 나서 html문서에 user가 아닌, users (List)를 보내서 결과를 얻고싶다.
 
  html 에서 user 의 name 에 접근하려고 할 때, 이렇게 사용할 것이다.
@@ -319,7 +317,7 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  {{#users}}
  이름 : {{name}}, 나이 : {{age}}
  <br />
- {{/users}
+ {{/users}}
  </body>
  </html>
  ```
@@ -334,9 +332,9 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
  여기서 name과 age는 인스턴스 변수에 직접 접근하는것이 아닌, getName() 과 getAge() 내에 있는 name 과 age 이다.
  이는 자바의 기본 문법이므로 숙지해야겠다.
 
- ---
+---
 
- ### 학습을 마치며 . . .
+### 학습을 마치며 . . .
 
  단순히 eclipse 만 사용했을 때는 전혀 어렵지 않던 아주 기본적인 문법들이 STS를 사용해서
  코딩하다보니 생각보다 어색하고 정리해 두어야 할 것이 많다고 느껴졌다. 앞으로 level3을 진행하면서,
