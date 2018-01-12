@@ -20,6 +20,8 @@ introduction: SPARK.JAVA 의 기초 학습
 
 1. spark.java 시작
 
+2. JAVA-racingCar 에의 적용 (WEB UI사용)
+
 ---
 ### 1. spark.java 시작
 
@@ -79,11 +81,20 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
 
  2. `Java application` 클릭
 
-으로 서버를 띄워줄 수 있다. 서버의 주소는,
+으로 서버를 띄워줄 수 있다. 단축키로는, `command` + `option(alt)` + `x` + `j` 이다. 서버의 주소는,
 
 > localhost:4567
 
-로 시작한다.
+로 시작한다. 이를 원하는 주소로 코드에서 바꿔줄 수 있다. `controller` 에서 코드를 추가해본다. (controller 란, main() 을 말한다.)
+
+```java
+public class MainController {
+	public static void main(String[] args) {
+    port(8080);
+  }
+}
+```
+> 이 코드가 실행 된 후에는 localhost:8080 으로 서버의 주소가 설정된다.
 
 웹의 내용을 수정한 뒤, 서버를 재시작 할 때에는 다시 클릭하는 과정들을 다 거치지 않고,
 상단의 Relaunch 버튼을 클릭하면 바로 재시작 된다.
@@ -102,59 +113,58 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
 
  이처럼 동적인 변수를 넘겨줄 때에는 url에서 변수이름 앞에 `: (콜론)` 을 붙여주어야 하고,
 
- 로직 구현부에서는 `req.params(":변수이름");` 로 받아주어야 반영이 가능하다.
+ 로직 구현부에서는 `req.params("변수이름");` 로 받아주어야 반영이 가능하다.
 
  (.queryParams() 사용법)
  - 로직 구현부에서 `return "Hello " + req.queryParams("name");` 로 구현되었을 때,
-
- 주소창에 `localhost:4567/hello?name=koo` 와 같이 입력하여 사용 가능하다.
+ > 주소창에 `localhost:4567/hello?name=koo` 와 같이 입력하여 사용 가능하다.
 
  2개 이상의 값을 출력해줄 때에는, 로직 구현부에 `return "Hello " + req.queryParams("name") + " 나이는 " + req.queryParams("age");` 와 같이 구현하고,
 
  주소창에 `localhost:4567/hello?name=koo&age=20` 과 같이 `&(앤드)` 연산자를 주소창에 넣어서 사용이 가능하다.
 
- ---
+---
 #### 1-6) `html 파일 생성 / UI 생성` 과 `post() 로 서버에 데이터 전달하기`
- - post() 방식이 왜 필요한가?
-  - 기존의 get() 방식을 이용하면, 개인의 입력 정보들(ex. 이름, 나이, 아이디 등)이 url에 모두 표기가 된다.
-  > localhost:4567/hello/name=koo&age=29
+- post() 방식이 왜 필요한가?
+ - 기존의 get() 방식을 이용하면, 개인의 입력 정보들(ex. 이름, 나이, 아이디 등)이 url에 모두 표기가 된다.
+ > localhost:4567/hello/name=koo&age=29
 
-  이와 같이 url에 남는다.
+ 이와 같이 url에 남는다.
 
-  - 비밀번호와 같은 중요 정보(물론 나이, 이름 등도 개인정보이므로 중요.)들은 url에 보여서는 안된다. post() 방식은 이처럼 url에 정보를 뜨지 않게 전달하는 방식이다.
+ - 비밀번호와 같은 중요 정보(물론 나이, 이름 등도 개인정보이므로 중요.)들은 url에 보여서는 안된다. post() 방식은 이처럼 url에 정보를 뜨지 않게 전달하는 방식이다.
 
+ - 또한, 데이터베이스 등의 "정보" 에 접근하는 모든 행위들은 post()로 구현한다.
 
- - 어떻게 사용하는가 ?
+- 어떻게 사용하는가 ?
 
-   html 파일의 form의 기본 default 값은 `"get"` 이다.
-   따라서 html 문서 내에서 `<form>` 속성을 `"post"` 로 변경해주면 된다.
-   이를 구현하는 방법은 아래와 같다.
+  html 파일의 form의 기본 default 값은 `"get"` 이다.
+  따라서 html 문서 내에서 `<form>` 속성을 `"post"` 로 변경해주면 된다.
+  이를 구현하는 방법은 아래와 같다.
 
-   - 기본 default 값(get방식 적용됨)
-   ```sts
-     <form action="/hello">
-   ```
+  - 기본 default 값(get방식 적용됨)
+  ```sts
+    <form action="/hello">
+  ```
 
-   - post 방식 사용 시
-   ```sts
-     <form action="/hello" method="post">
-   ```
- ## ※ *추후 get() 방식과 post() 방식의 차이점에 대해 학습 필요!*
+  - post 방식 사용 시
+  ```sts
+    <form action="/hello" method="post">
+  ```
+## ※ *추후 get() 방식과 post() 방식의 차이점에 대해 학습 필요!*
 
- ---
+---
 #### 1-7) 동적인 화면 구성하기 (template engine)
 
 - 기존의 main 문은 아래와 같았다.
 ```java
 public class HelloWorld {
-    public static void main(String[] args) {
-    staticFiles.location("/static");
+	public static void main(String[] args) {
+		staticFiles.location("/static");
 
-    post("/hello", (req, res) -> {
-      return "get Hello " + req.queryParams("name")
-              + " 나이는 " + req.queryParams("age");
-      });
-    }
+		post("/hello", (req, res) -> {
+			return "get Hello " + req.queryParams("name") + " 나이는 " + req.queryParams("age");
+		});
+	}
 }
 ```
 
@@ -162,165 +172,166 @@ public class HelloWorld {
 ```java
 //example 1
 public class HelloWorld {
-  public static void main(String[] args) {
-    staticFiles.location("/static");
-    post("/hello", (req, res) -> {
-      return "<html>" +
-            "<body>" +
-            "<h1>회원 가입 결과</h1>" +
-            "이름 : " + req.queryParams("name") +
-            "<br /><br />" +
-            "나이 : " + req.queryParams("age") +
-            "</body>" +
-            "</html>";
-          });
-  }
+	public static void main(String[] args) {
+		staticFiles.location("/static");
+
+		post("/hello", (req, res) -> {
+			return "<html>" +
+					"<body>" +
+					"<h1>회원 가입 결과</h1>" +
+					"이름 : " + req.queryParams("name") +
+					"<br /><br />" +
+					"나이 : " + req.queryParams("age") +
+					"</body>" +
+					"</html>";
+		});
+	}
 }
 ```
 
 - 하지만 너무 하드코딩이다.. (코드가 길어지면 답이 없다..) 이럴 때는 템플릿 엔진을 이용하면 된다.
 
-- 먼저 sparkjava 홈페이지에서 handlebars 템플릿 엔진을 찾는다.
-```sts
-  <dependency>
-     <groupId>com.sparkjava</groupId>
-     <artifactId>spark-template-handlebars</artifactId>
-     <version>2.7.1</version>
-  </dependency>
-```
-여기서 `groupId` 와 `artifactId` 를 gradle 파일의 `dependencies` 에 복사해준다.
-```java
-  dependencies {
- 	compile "com.sparkjava:spark-core:2.7.1"
- 	compile "com.sparkjava:spark-template-handlebars:2.7.1"
-  }
-```
-그 후에 gradle 파일을 우클릭한 후, refresh를 해주면, project and external dependencies 안에 template-handlebars 가 생성된 것을 확인할 수 있다.
+ - 먼저 sparkjava 홈페이지에서 handlebars 템플릿 엔진을 찾는다.
+ ```sts
+ <dependency>
+    <groupId>com.sparkjava</groupId>
+    <artifactId>spark-template-handlebars</artifactId>
+    <version>2.7.1</version>
+ </dependency>
+ ```
+ 여기서 `groupId` 와 `artifactId` 를 gradle 파일의 `dependencies` 에 복사해준다.
+ ```java
+ dependencies {
+	compile "com.sparkjava:spark-core:2.7.1"
+	compile "com.sparkjava:spark-template-handlebars:2.7.1"
+ }
+ ```
+ 그 후에 gradle 파일을 우클릭한 후, refresh를 해주면, project and external dependencies 안에 template-handlebars 가 생성된 것을 확인할 수 있다.
 
-- 다음으로 helloWorld 파일을 수정한다. (render 메서드의 소스는 spark java에서 구할 수 있다.)
-```java
-    import static spark.Spark.*;
+ - 다음으로 helloWorld 파일을 수정한다. (render 메서드의 소스는 spark java에서 구할 수 있다.)
+   ```java
+   import static spark.Spark.*;
 
-    import java.util.HashMap;
-    import java.util.Map;
+   import java.util.HashMap;
+   import java.util.Map;
 
-    import spark.ModelAndView;
-    import spark.template.handlebars.HandlebarsTemplateEngine;
+   import spark.ModelAndView;
+   import spark.template.handlebars.HandlebarsTemplateEngine;
 
-    public class HelloWorld {
-    	public static void main(String[] args) {
-    		staticFiles.location("/static");
+   public class HelloWorld {
+   	public static void main(String[] args) {
+   		staticFiles.location("/static");
 
-    		post("/hello", (req, res) -> {
-    			Map<String, Object> model = new HashMap<>();
-    			model.put("name", req.queryParams("name"));
-    			model.put("age", req.queryParams("age"));
+   		post("/hello", (req, res) -> {
+   			Map<String, Object> model = new HashMap<>();
+   			model.put("name", req.queryParams("name"));
+   			model.put("age", req.queryParams("age"));
 
-    			return render(model, "/result.html");
-    		});
-    	}
+   			return render(model, "/result.html");
+   		});
+   	}
 
-    	public static String render(Map<String, Object> model,
-                                    String templatePath) {
-    	    return new HandlebarsTemplateEngine().render(new
-           ModelAndView(model, templatePath));
-    	}
-    }
-```
-- 마지막으로 result.html 을 수정한다.
-```html
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <meta charset="UTF-8">
-    <title>회원 가입</title>
-    </head>
-    <body>
-    <h1>회원 가입 결과2</h1>
-    이름 : {{name}}
-    <br />
-    <br />
-    나이 : {{age}}
-    </body>
-    </html>
-```
-> 여기서 `중괄호 두개 사이` 의 name 은 helloworld 에서 name 이름에 해당하는 값을 받아옴을 의미한다.
+   	public static String render(Map<String, Object> model, String templatePath) {
+   	    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+   	}
+   }
+   ```
+ - 마지막으로 result.html 을 수정한다.
+   ```html
+   <!DOCTYPE html>
+   <html>
+   <head>
+   <meta charset="UTF-8">
+   <title>회원 가입</title>
+   </head>
+   <body>
+   <h1>회원 가입 결과2</h1>
+   이름 : {{name}}
+   <br />
+   <br />
+   나이 : {{age}}
+   </body>
+   </html>
+   ```
+ > 여기서 `{{. . .}}` 는 helloworld 에서 name 이름에 해당하는 값을 받아옴을 의미한다.
 
-- 수정 후에 resource 폴더 안에 templates 폴더를 만들어 주고, result.html을 이동시킨다.
-(default 값이 가르키는 곳이 resource -> templates 이다.)
+ - 수정 후에 resource 폴더 안에 templates 폴더를 만들어 주고, result.html을 이동시킨다. (default 값이 가르키는 곳이 resource -> templates 이다.)
 
- ---
+---
 #### 1-8) 여러개의 동적 값을 출력하기
 
 여러개의 값을 출력하기 이전에 자바의 문법에 대해 알아야 한다.
 예를들어 아래와 같이 User class를 만들었다고 하자.
-  ```java
-  public class User {
-    private String name;
-   	private String age;
 
-   	public String getName() {
-   		return name;
-   	}
+```java
+public class User {
+	private String name;
+	private String age;
 
-   	public void setName(String name) {
-   		this.name = name;
-   	}
+	public String getName() {
+		return name;
+	}
 
-   	public String getAge() {
-   		return age;
-   	}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-   	public void setAge(String age) {
-   		this.age = age;
-   	}
+	public String getAge() {
+		return age;
+	}
 
-   }
-  ```
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+}
+```
+
 그리고 main 에서 user들을 모아두는 list를 만들어서 관리한다고 하자.
 
 ```java
- public class UserMain {
- 	public static void main(String[] args) {
- 		staticFiles.location("/static");
+public class UserMain {
+	public static void main(String[] args) {
+		staticFiles.location("/static");
 
- 		List<User> users = new ArrayList<>();
- 		post("/users", (req, res) -> {
- 			User user = new User();
- 			user.setName(req.queryParams("name"));
- 			user.setAge(req.queryParams("age"));
- 			users.add(user);
- 			Map<String, Object> model = new HashMap<>();
- 			model.put("users", users);
+		List<User> users = new ArrayList<>();
+		post("/users", (req, res) -> {
+			User user = new User();
+			user.setName(req.queryParams("name"));
+			user.setAge(req.queryParams("age"));
+			users.add(user);
+			Map<String, Object> model = new HashMap<>();
+			model.put("users", users);
 
- 			return render(model, "/result.html");
- 		});
- 	}
+			return render(model, "/result.html");
+		});
+	}
 
- 	public static String render(Map<String, Object> model, String templatePath) {
- 	    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
- 	}
- }
+	public static String render(Map<String, Object> model, String templatePath) {
+	    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+	}
+}
 ```
+
 그리고 나서 html문서에 user가 아닌, users (List)를 보내서 결과를 얻고싶다.
 
 html 에서 user 의 name 에 접근하려고 할 때, 이렇게 사용할 것이다.
 
 ```html
- <!DOCTYPE html>
- <html>
- <head>
- <meta charset="UTF-8">
- <title>회원 가입</title>
- </head>
- <body>
- <h1>회원 가입 결과2</h1>
- {{#users}}
- 이름 : {{name}}, 나이 : {{age}}
- <br />
- {{/users}}
- </body>
- </html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원 가입</title>
+</head>
+<body>
+<h1>회원 가입 결과2</h1>
+{{#users}}
+이름 : {{name}}, 나이 : {{age}}
+<br />
+{{/users}
+</body>
+</html>
 ```
 
 일단 첫째로, 위와같이 코드를 작성한다면, List 내에 있는 모든 user들의 정보가
@@ -330,18 +341,96 @@ for문을 돌듯이 출력되어 나온다. (한명이 아닌 전체가) 이 문
 
 > 정답은 `X` 다.
 
-여기서 name과 age는 인스턴스 변수에 직접 접근하는것이 아닌, getName() 과 getAge() 내에 있는 name 과 age 이다.
-이는 자바의 기본 문법이므로 숙지해야겠다.
+여기서 name과 age는 인스턴스 변수에 직접 접근하는것이 아닌, getName() 과 getAge() 내에 있는 name 과 age 이다. 이는 자바의 기본 문법이므로 숙지해야겠다.
+
+---
+### 2. JAVA-racingCar 에의 적용 (WEB UI사용)
+- WEB UI 를 적용하기 전에 먼저 클래스가 덜 분리된 부분을 수정했다. main()이 RacingCar 클래스 내에 정의되어 있었고, 그 내부에는 여러 메소드들이 존재하고 있었다.
+> MainController 클래스를 새로 만들고, main()을 옮겨주었다.
+
+- 이후에, 기존의 console을 사용하던 것을 web UI를 적용해야 했기 때문에, 코드를 아래와 같이 수정했다.
+
+```java
+package car;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
+
+import static spark.Spark.*;
+
+public class MainController {
+	public static void main(String[] args) {
+		ArrayList<Car> cars = new ArrayList<Car>();
+		port(8080);
+
+		get("/", (req, res) -> {
+			return render(new HashMap<> (), "index.html");
+		});
+
+		post("/name", (req, res) -> {
+			String inputName = req.queryParams("names");
+			ArrayList<String> carNameList = new ArrayList<String>(Arrays.asList(RacingCar.splitName(inputName)));
+			for (String name : carNameList) {
+				cars.add(new Car(name));
+			}
+			Map<String, Object> model = new HashMap<>();
+			model.put("cars", cars);
+			return render(model, "game.html");
+		});
+
+		get("/result", (req, res) -> {
+			int inputNum = Integer.parseInt(req.queryParams("turn"));
+
+			for (int i = 0; i < inputNum; i++) {
+				RacingCar.startRace(cars);
+			}
+
+			Map<String, Object> model = new HashMap<>();
+			model.put("cars", cars);
+			return render(model, "result.html");
+		});
+	}
+
+	public static String render(Map<String, Object> model, String templatePath) {
+	    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+	}
+}
+
+```
+
+- 이를 받아주는 html 문서들을 수정했다.
+
+ ```html
+<table>
+  {{#cars}}
+  <tr>
+  <td>이름 : {{name}}<td>
+  </tr>
+  {{/cars}}
+</table>
+```
+> cars 리스트를 for문 돌듯이 순회하면서, name을 출력해주는 부분
+
+ ```html
+<h3>결과입니다</h3>
+{{#cars}}
+  <div id="standings"> {{name}} : <pre>{{result}}&#128652;</pre></div>
+{{/cars}}
+```
+> 결과를 출력해주는 부분
 
 ---
 
 ### 학습을 마치며 . . .
 
- 단순히 eclipse 만 사용했을 때는 전혀 어렵지 않던 아주 기본적인 문법들이 STS를 사용해서
- 코딩하다보니 생각보다 어색하고 정리해 두어야 할 것이 많다고 느껴졌다. 앞으로 level3을 진행하면서,
- 계속해서 사용하다보면 언젠간 어색하지 않게 코드에 녹여낼 수 있는 날이 올 것이라 믿는다.
+단순히 eclipse 만 사용했을 때는 전혀 어렵지 않던 아주 기본적인 문법들이 STS를 사용해서
+코딩하다보니 생각보다 어색하고 정리해 두어야 할 것이 많다고 느껴졌다. 앞으로 level3을 진행하면서, 계속해서 사용하다보면 언젠간 어색하지 않게 코드에 녹여낼 수 있는 날이 올 것이라 믿는다.
 
- POBI(박재성 님)의 YOUTUBE 강의는 초보자의 눈높이에 맞춘 강의여서 이해가 잘 되고있다.
- 동영상 학습을 바탕으로 계속해서 직접 코드에 사용해보면서 손과 뇌에 익히는것이 중요한 것 같다.
+POBI(박재성 님)의 YOUTUBE 강의는 초보자의 눈높이에 맞춘 강의여서 이해가 잘 되고있다. 동영상 학습을 바탕으로 계속해서 직접 코드에 사용해보면서 손과 뇌에 익히는것이 중요한 것 같다.
 
- 앞으로의 level3 과제들이 기대되는 하루다. 화이팅!!
+앞으로의 level3 과제들이 기대되는 하루다. 화이팅!!
