@@ -81,16 +81,15 @@ main class 생성은 기존 eclipse 사용시와 동일하다.
 > localhost:4567
 
 로 시작한다. 이를 원하는 주소로 코드에서 바꿔줄 수 있다. `controller` 에서 코드를 추가해본다. (controller 란, main() 을 말한다.)
-
-```java
-public class MainController {
-    public static void main(String[] args) {
-    port(8080);
+- controller code
+  ```java
+  public class MainController {
+      public static void main(String[] args) {
+      port(8080);
+    }
   }
-}
-```
-
-> 이 코드가 실행 된 후에는 localhost:8080 으로 서버의 주소가 설정된다.
+  ```
+  > 이 코드가 실행 된 후에는 localhost:8080 으로 서버의 주소가 설정된다.
 
 웹의 내용을 수정한 뒤, 서버를 재시작 할 때에는 다시 클릭하는 과정들을 다 거치지 않고, 상단의 Relaunch 버튼을 클릭하면 바로 재시작 된다.
 
@@ -170,7 +169,9 @@ public class MainController {
         staticFiles.location("/static");
 
         post("/hello", (req, res) -> {
-            return "get Hello " + req.queryParams("name") + " 나이는 " + req.queryParams("age");
+            return "get Hello " + req.queryParams("name") + " 나이는 "
+
+                    + req.queryParams("age");
         });
     }
   }
@@ -245,8 +246,10 @@ public class MainController {
            });
        }
 
-       public static String render(Map<String, Object> model, String templatePath) {
-           return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+       public static String render(Map<String, Object> model,
+                                        String templatePath) {
+           return new HandlebarsTemplateEngine().render(
+                        new ModelAndView(model, templatePath));
        }
     }
     ```
@@ -279,76 +282,78 @@ public class MainController {
 #### 1-8) 여러개의 동적 값을 출력하기
 
 여러개의 값을 출력하기 이전에 자바의 문법에 대해 알아야 한다. 예를들어 아래와 같이 User class를 만들었다고 하자.
+- JAVA file (User)
+  ```java
+  public class User {
+      private String name;
+      private String age;
 
-```java
-public class User {
-    private String name;
-    private String age;
+      public String getName() {
+          return name;
+      }
 
-    public String getName() {
-        return name;
-    }
+      public void setName(String name) {
+          this.name = name;
+      }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+      public String getAge() {
+          return age;
+      }
 
-    public String getAge() {
-        return age;
-    }
+      public void setAge(String age) {
+          this.age = age;
+      }
 
-    public void setAge(String age) {
-        this.age = age;
-    }
-
-}
-```
+  }
+  ```
 
 그리고 main 에서 user들을 모아두는 list를 만들어서 관리한다고 하자.
+- JAVA file (UserMain)
+  ```java
+  public class UserMain {
+    public static void main(String[] args) {
+      staticFiles.location("/static");
+      List<User> users = new ArrayList<>();
 
-```java
-public class UserMain {
-  public static void main(String[] args) {
-    staticFiles.location("/static");
-    List<User> users = new ArrayList<>();
+      post("/users", (req, res) -> {
+        User user = new User();
+        user.setName(req.queryParams("name"));
+        user.setAge(req.queryParams("age"));
+        users.add(user);
+        Map<String, Object> model = new HashMap<>();
+        model.put("users", users);
 
-    post("/users", (req, res) -> {
-      User user = new User();
-      user.setName(req.queryParams("name"));
-      user.setAge(req.queryParams("age"));
-      users.add(user);
-      Map<String, Object> model = new HashMap<>();
-      model.put("users", users);
-
-      return render(model, "/result.html");
-    });
+        return render(model, "/result.html");
+      });
+    }
+    public static String render(Map<string, object=""> model,
+                                String templatePath) {
+      return new HandlebarsTemplateEngine().render(
+                      new ModelAndView(model, templatePath));
+    }
   }
-  public static String render(Map<string, object=""> model, String templatePath) {
-    return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-  }
-}
-```
+  ```
 
 그리고 나서 html문서에 user가 아닌, users (List)를 보내서 결과를 얻고싶다.
 
 html 에서 user 의 name 에 접근하려고 할 때, 이렇게 사용할 것이다.
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>회원 가입</title>
-</head>
-<body>
-<h1>회원 가입 결과2</h1>
-{{#users}}
-이름 : {{name}}, 나이 : {{age}}
-<br />
-{{/users}
-</body>
-</html>
-```
+- html file
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="UTF-8">
+  <title>회원 가입</title>
+  </head>
+  <body>
+  <h1>회원 가입 결과2</h1>
+  {{#users}}
+  이름 : {{name}}, 나이 : {{age}}
+  <br />
+  {{/users}}
+  </body>
+  </html>
+  ```
 
 일단 첫째로, 위와같이 코드를 작성한다면, List 내에 있는 모든 user들의 정보가 for문을 돌듯이 출력되어 나온다. (한명이 아닌 전체가) 이 문법을 기억하자.
 
@@ -367,78 +372,84 @@ html 에서 user 의 name 에 접근하려고 할 때, 이렇게 사용할 것�
   > MainController 클래스를 새로 만들고, main()을 옮겨주었다.
 
 - 이후에, 기존의 console을 사용하던 것을 web UI를 적용해야 했기 때문에, 코드를 아래와 같이 수정했다.
+  ```java
+  package car;
 
-```java
-package car;
+  import java.util.ArrayList;
+  import java.util.Arrays;
+  import java.util.HashMap;
+  import java.util.Map;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+  import spark.ModelAndView;
+  import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+  import static spark.Spark.*;
 
-import static spark.Spark.*;
+  public class MainController {
+      public static void main(String[] args) {
+          ArrayList<Car> cars = new ArrayList<Car>();
+          port(8080);
 
-public class MainController {
-    public static void main(String[] args) {
-        ArrayList<Car> cars = new ArrayList<Car>();
-        port(8080);
+          get("/", (req, res) -> {
+              return render(new HashMap<> (), "index.html");
+          });
 
-        get("/", (req, res) -> {
-            return render(new HashMap<> (), "index.html");
-        });
+          post("/name", (req, res) -> {
+              String inputName = req.queryParams("names");
+              ArrayList<String> carNameList = new ArrayList<String>
+              (Arrays.asList(RacingCar.splitName(inputName)));
 
-        post("/name", (req, res) -> {
-            String inputName = req.queryParams("names");
-            ArrayList<String> carNameList = new ArrayList<String>(Arrays.asList(RacingCar.splitName(inputName)));
-            for (String name : carNameList) {
-                cars.add(new Car(name));
-            }
-            Map<String, Object> model = new HashMap<>();
-            model.put("cars", cars);
-            return render(model, "game.html");
-        });
+              for (String name : carNameList) {
+                  cars.add(new Car(name));
+              }
 
-        get("/result", (req, res) -> {
-            int inputNum = Integer.parseInt(req.queryParams("turn"));
+              Map<String, Object> model = new HashMap<>();
+              model.put("cars", cars);
+              return render(model, "game.html");
+          });
 
-            for (int i = 0; i < inputNum; i++) {
-                RacingCar.startRace(cars);
-            }
+          get("/result", (req, res) -> {
+              int inputNum = Integer.parseInt(req.queryParams("turn"));
 
-            Map<String, Object> model = new HashMap<>();
-            model.put("cars", cars);
-            return render(model, "result.html");
-        });
-    }
+              for (int i = 0; i < inputNum; i++) {
+                  RacingCar.startRace(cars);
+              }
 
-    public static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-    }
-}
-```
+              Map<String, Object> model = new HashMap<>();
+              model.put("cars", cars);
+              return render(model, "result.html");
+          });
+      }
+
+      public static String render(Map<String, Object> model,
+                                  String templatePath) {
+          return new HandlebarsTemplateEngine().render(
+                                new ModelAndView(model, templatePath));
+      }
+  }
+  ```
 
 - 이를 받아주는 html 문서들을 수정했다.
 
   ```html
   <table>
-  {{#cars}}
+  {-{#cars}}
   <tr>
   <td>이름 : {{name}}<td>
   </tr>
-  {{/cars}}
+  {-{/cars}}
   </table>
   ```
 
   > cars 리스트를 for문 돌듯이 순회하면서, name을 출력해주는 부분
 
+  > #cars 부분에 '-' 는 없애야 함. (보기 위해 찍어놓음.)
+
   ```html
   <h3>결과입니다</h3>
-  {{#cars}}
+  {-{#cars}}
   <div id="standings"> {{name}} : <pre>{{result}}&#128652;</pre></div>
-  {{/cars}}
+  {-{/cars}}
   ```
 
   > 결과를 출력해주는 부분
