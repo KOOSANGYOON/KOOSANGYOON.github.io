@@ -18,15 +18,14 @@ introduction: 반복주기 학습 (local & remote 환경 세팅 / AWS 서버 학
 
 ## TIL
 
-반복주기 학습 (local & remote 개발)
-- 1-1) 학습 방향과 학습 방법
-
-- 1-2) 로컬 개발 환경 세팅
+## 1. 반복주기 학습 (local & remote 개발)
+### 1-1) 학습 방향과 학습 방법
+### 1-2) 로컬 개발 환경 세팅
   - 1-2-1) 설치 및 설정
   - 1-2-2) server 실행 방법
   - 1-2-3) html 파일 추가
 
-- 1-3) 원격 서버에 적용하기 (AWS)
+### 1-3) 원격 서버에 적용하기 (AWS)
   - 1-3-1) AWS 서버 생성하기
   - 1-3-2) 서버 접속하기
 
@@ -44,20 +43,23 @@ introduction: 반복주기 학습 (local & remote 환경 세팅 / AWS 서버 학
 
 #### 1-2-1) 설치 및 설정
 
+- 설치 과정
 1) `STS` 를 설치한다.
 
 2) `JDK` 를 설치한다.
 
 3) STS 실행 후, `Spring Starter Project` 생성
-- (command + n) -> `Spring Starter Project` 생성
+> (command + n) -> `Spring Starter Project` 생성
 
-- setting 값 설정
+- 설정 과정
+
+1) setting 값 설정
  - Name : "원하는 project 이름"
  - Type : Maven
  - Packaging : Jar
  - Group : "원하는 domain"
 
-- Dependencies 설정
+2) Dependencies 설정
  - `web`, `mustache`, `devtools` 추가
 
 ---
@@ -65,7 +67,7 @@ introduction: 반복주기 학습 (local & remote 환경 세팅 / AWS 서버 학
 
 좌측 하단의 `boot Dashboard` 에서 원하는 project 의 서버를 실행시킨다.
 
-> (Start or restart the process associated with the select element) 버튼 클릭
+-> (Start or restart the process associated with the select element) 버튼 클릭
 
 -> http://localhost:8080 을 확인해보면 서버가 시작되어있다.
 
@@ -77,15 +79,15 @@ Spring boot 프로젝트는 default 로 `src/main/resources` 디렉토리 아래
 - `static` 아래에 새로운 html 파일 생성
  > index.html 로 생성한다.
 
-- body 사이에 내용을 적고, (예를들어 Hello, World!) http:localhost:8080/index.html 에서 확인 가능.
-> 하지만, 매번 수정시마다 refresh 해줘야 하는 불편함이 있다.
+- \<body> ... \</body> 사이에 내용을 적고, (예를들어 Hello, World!) http:localhost:8080/index.html 에서 확인 가능.
+#### -> 하지만, 매번 수정시마다 refresh 해줘야 하는 불편함이 있다.
+> 이를 해결하는 방안으로는 chrome extension을 설치하는 방법이 있다.
 
-이를 해결하는 방안으로는 chrome extension을 설치하는 방법이 있다.
 - "live reload" 를 검색하여 chrome 웹스토어에서 `chrome 에 추가` 를 선택한다.
 > 정상적으로 추가가 되었다면, 주소창 옆에 `Enable LiveReload 버튼` 이 생성된다.
 
 - 설치 후에는, 본인이 refresh 하길 원하는 주소로 이동후에 `Enable ~` 버튼을 클릭한다.
-> 클릭 후에 버튼 위에 마우스를 대면, "LiveReload connected" 라고 뜰 것이다.
+> 클릭 후에 버튼 위에 마우스를 대면, "LiveReload connected" 라고 뜬다.
 
 - 활성화 되어있는 상태에서, STS 내의 코드를 수정하고, 저장을 하는 순간 chrome창에 변경된 내용이 게시된다.
 
