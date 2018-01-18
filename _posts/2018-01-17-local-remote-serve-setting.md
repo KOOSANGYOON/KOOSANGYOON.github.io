@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 반복주기 학습
-date: 2018-01-16T17:32:40.000Z
+date: 2018-01-17T17:32:40.000Z
 image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/web.png?raw=true'
 description: TIL (local & remote 환경 세팅 / AWS 서버 학습)
 category: TIL
