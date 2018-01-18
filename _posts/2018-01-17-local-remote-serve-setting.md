@@ -14,7 +14,7 @@ twitter_text: 반복주기 학습 (local & remote 환경 세팅 / AWS 서버 학
 introduction: 반복주기 학습 (local & remote 환경 세팅 / AWS 서버 학습)
 ---
 
-# (2018.01.17)
+# (2018.01.17 ~ 2018.01.18)
 
 ## TIL
 
@@ -128,3 +128,63 @@ Spring boot 프로젝트는 default 로 `src/main/resources` 디렉토리 아래
 
  (추가 정보) 한글 버젼으로 세팅하는 명령어
  > sudo locale-gen ko_KR.UTF-8
+
+---
+#### 1-3-3) 서버에 자바 소스코드 배포
+
+먼저, 서버에 접속한다. (1-3-2 참고)
+
+우리는 command 상에서 자바를 다운로드 받아야 한다. 하지만 command 에서는 브라우져를
+이용할 수 없다. 따라서 command 로만 다운로드를 받아야 한다. 이를 위해서 `wget` 이라는
+명령어를 활용해서 특정 주소에 있는 프로그램을 다운로드 받을 수 있다.
+사용 방법은, 브라우져에서 JDK 다운로드 주소를 확인하고, 복사해서 wget 명령어 뒤에 덧붙인다.
+
+> ex) wget http://download.oracle.com/jdk-9.0.4_linux-x64_bin.tar.gz
+
+하지만 제대로 다운로드가 되지 않고 일부만 다운로드 되어있다. 문제가 무엇일까?
+브라우져 상에서는 '라이센스에 동의함' 에 체크를 하고 다운로드를 받지만, 터미널에서는 그것을
+하지 않았기 때문이다. 이를 위한 옵션을 적어주어야 한다.
+따라서 ` --header "Cookie: oraclelicense=accept-securebackup-cookie"` 옵션이 필요하다.
+
+> ex) wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/jdk-9.0.4_linux-x64_bin.tar.gz
+
+설치 이후, 압축을 풀기 위해서는 `tar` 명령어를 이용한다.
+> ex) tar -xvf jdk-9.0.4_linux-x64_bin.tar.gz
+
+이로써 설치는 끝이났다. 하지만 현재의 상태는 java 명령어를 사용할 수 있는 공간이 제한적이다. (다운로드 받은 jdk 디렉토리의 bin 에서 사용 가능)
+따라서 jdk를 사용하고 싶을때, 사용할 때마다 jdk 디렉토리로 들어가서 작업을 해야한다.
+ubuntu의 전역에서 사용하기 위해서는 어디서나 사용할 수 있도록 path 설정을 해줘야 한다.
+
+먼저 jdk-9.0.4 와 같은 이름은 사용하기에 불편하기 때문에 별칭을 부여한다. 이는 `ln` 명령어로 부여가 가능하다.
+
+> ex) ln -s jdk-9.0.4/ java
+
+이렇게 해주면, 앞으로 jdk-9.0.4 디렉토리를 가고 싶을 때, cd java 로 이동할 수 있다.
+이후에 홈 디렉토리로 이동하여 .bash_profile 파일을 만들어서 path 설정을 해보자.
+`vi` 명령어를 이용하여 스크립트를 만들도록 한다.
+
+> ex) vi .bash_profile
+
+.bash_profile 의 내용으로 `PATH=$PATH:~/java/bin` 을 적고 저장/종료한다.
+이후에 ubuntu 를 재시작하여야 적용이 되지만, 재시작 없이 적용시키는 `source` 명령어를
+이용하여 바로 적용시킨다.
+
+> ex) source .bash_profile
+
+여기까지 완료되면 홈 디렉토리에서 자바 명령어를 실행해보자. (ex) java -version
+> 잘 실행됨을 확인할 수 있다.
+
+JAVA 세팅이 끝났다면, 우리가 프로젝트에서 설정한 Jar 파일들을 다운받아야 한다. 터미널에서
+git repository 와 연결된 디렉토리로 가서(우리가 작업중인 프로젝트 디렉토리),
+`mvnw` 파일을 실행한다.
+
+> ./mvnw clean package 이 명령어를 사용하면 프로젝트가 빌드된다.
+
+빌드 후에 target 디렉토리로 가보면, jar 파일이 생성되어 있다. 이 파일을 이용하여
+서버를 시작할 수 있다.
+
+> java -jar "jar파일이름"
+
+서버가 시작됨을 확인할 수 있다. 서버의 종료는 `ctrl + c` 로 종료한다.
+
+---
