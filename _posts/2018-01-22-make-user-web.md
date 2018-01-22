@@ -2,7 +2,7 @@
 layout: post
 title: 첫 웹 프로젝트 구현 (사용자 등록, 목록 확인)
 date: 2018-01-21T18:24:20.000Z
-image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/function.jpg?raw=true'
+image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/login.jpg?raw=true'
 description: TIL
 category: TIL
 tags:
