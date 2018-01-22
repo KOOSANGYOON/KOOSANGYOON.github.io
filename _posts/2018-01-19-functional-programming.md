@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 함수형 프로그래밍의 기초
-date: 2018-01-18T16:00:20.000Z
+date: 2018-01-19T16:00:20.000Z
 image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201801/function.jpg?raw=true'
 description: TIL (Function 단어가 포함된 사진이라 . . .)
 category: TIL
