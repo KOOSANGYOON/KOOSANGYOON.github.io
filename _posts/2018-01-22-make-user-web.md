@@ -30,7 +30,14 @@ introduction: 첫 웹 프로젝트 구현 (사용자 등록, 목록 확인)
 ### 2-1) 데이터베이스 설정
 ### 2-2) User 클래스 DB 테이블에 mapping
 ### 2-3) Controller 에서 repository 사용
-### 2-4) 실습
+
+## 3. 인증 기반 개발
+### 3-1) 로그인 기능 구현
+### 3-2) 로그인 상태에 따른 메뉴 처리 및 로그아웃
+### 3-3) 자기 자신의 정보만 수정
+### 3-4) 중복제거, clean code, 쿼리 보기 설정
+### 3-5) 질문하기, 질문 목록 기능 구현
+
 ---
 ### 1-1) 학습 방향과 학습 방법
 
@@ -172,7 +179,7 @@ server로 data를 전달할 때에 html 문서 내에서 <\form> 태그를 사�
 
 	- 칼럼
 	> 컬럼(column)이란 관계형 데이터베이스 테이블에서 특정한 단순 자료형의 일련의 데이터값과 테이블에서의 각 열을 말한다. 컬럼은 열이 어떻게 구성되어야 할 지에 대한 구조를 제공한다. 관계형 데이터베이스 용어에서 컬럼과 같은 의미로 사용되는 것은 속성(attribute)이다.
-	 ![Image](https://github.com/KOOSANGYOON/TIL/raw/master/TIL201801/column.png)
+	 ![Image](./column.png)
 
 	- primary key(pk)
 	> 기본 키(primary key)는 `주 키` 또는 `프라이머리 키` 라고 하며, 관계형 데이터베이스에서 조(레코드)의 **식별자로 이용하기에 가장 적합한 것** 을 관계 (테이블)마다 단 한 설계자에 의해 선택, 정의된 후보 키를 말한다.
@@ -182,7 +189,7 @@ server로 data를 전달할 때에 html 문서 내에서 <\form> 태그를 사�
 
 	- ERD
 	> 개체-관계 모델(Entity-Relationship-Diagram)이란 구조화된 데이터에 대한 일련의 표현이다. 각 개체들 사이의 관계에 대한 그림을 표기하여 데이터를 모델링한다.
-	 ![Image](https://github.com/KOOSANGYOON/TIL/raw/master/TIL201801/erd.png)
+	 ![Image](./erd.png)
 
 	- 쿼리 또는 SQL(Structured Query Language)
 	> 관계형 데이터베이스 관리 시스템(RDBMS)의 데이터를 관리하기 위해 설계된 특수 목적의 프로그래밍 언어이다.
@@ -380,4 +387,144 @@ public String updateForm(@PathVariable long id, Model model) {
 ```
 
 ---
-### 2-4) 실습
+### 3-1) 로그인 기능 구현
+
+login 기능을 담당하는 부분의 코드는 다음과 같다.
+
+```java
+@GetMapping("/user/loginForm")
+public String loginForm() {		//로그인 창을 띄우는 부분
+		return "/user/login";
+}
+
+@PostMapping("/user/login")
+public String login(String userId, String password, Model model, HttpSession session) {
+		System.out.println(userId + " " + password);
+		User user = userRepository.findByUserId(userId);
+
+		if (user == null) {
+			System.out.println("========== Login FAILED... user ID didn't exist =============");
+			return "redirect:/user/loginForm";
+		}
+
+		if (!password.equals(user.getPassword())) {
+			System.out.println("========== Login FAILED... password was wrong! =============");
+			return "redirect:/user/loginForm";
+		}
+
+		System.out.println("========== Login Success!! User is " + user + " =============");
+
+		session.setAttribute("sessionedUser", user);		//(1)
+		return "redirect:/";
+}
+```
+
+(1) <- 여기서 Model 에 정보를 넣어서 html 문서에 보내주는 것처럼,
+HttpSession 을 만들어서 정보를 넣어준 뒤, html 문서에 정보를 보내준다.
+DB에 user 정보를 담는 부분이라고 생각할 수 있다.
+
+---
+### 3-2) 로그인 상태에 따른 메뉴 처리 및 로그아웃
+
+`login` 과 `logout` 은 `HttpSession` 을 활용하여 구현한다!
+
+#### ㄱ) 로그인 상태에 따른 메뉴 처리
+
+현재 코드에서 중복을 제거하기 위해 frame.html 이라는 문서 안에 중복되는 양식들을 넣어놨다.
+(예를 들어 메뉴의 버튼들 등) login/logout 상태마다 이 메뉴가 다르게 나타나야하기
+때문에, 이 코드를 가지고 있는 frame.html 의 코드를 수정해야 한다. html 상에서
+mustache 문법을 통해 if/else 문을 사용해야 한다. 이는 {{#name}} / {{^name}} 와
+같이 표현할 수 있다. 이를 이용하려면, 기본 세팅값을 변경해주어야 한다.
+기존의 세팅은 spring.mustache.expose-session-attributes=false 로 되어있다.
+이를 application.properties 에서 true로 변경해서 등록한다.
+등록 후의 작성된 코드는 아래와 같다.
+
+```html
+<div class="collapse navbar-collapse" id="navbar-collapse2">
+		<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="/">Posts</a></li>
+				{{^sessionedUser}}
+				<li><a href="../user/loginForm" role="button">로그인</a></li>
+				<li><a href="../user/form.html" role="button">회원가입</a></li>
+				{{/sessionedUser}}
+				{{#sessionedUser}}
+				<li><a href="#" role="button">로그아웃</a></li>
+				<li><a href="#" role="button">개인정보수정</a></li>
+				{{/sessionedUser}}
+		</ul>
+</div>
+```
+
+{{^user}} 로 감싼 부분은 session 에 user 가 등록되어있지 않을때(logout 상태) 보여지게 했고, {{#user}} 로 감싼 부분은 session 에 user 가 등록되어있을 때(login 상태)
+보여지게 했다.
+
+#### ㄴ) 로그아웃 기능 구현
+
+로그인과 반대로 HttpSession 에 담겨져있는 user 정보를 지워야한다. HttpSession 의
+정보는 어느 클래스에서 사용을 하던지 저장되있는 그 상태 그대로 움직인다. 따라서 삭제만
+해주면 간단하게 구현된다. 삭제하는 메서드는 `removeAttribute("key name");` 이다.
+아까전에 'sessionedUser' 라는 이름으로 세션에 등록했기 때문에
+이번에도 'sessionedUser' 를 삭제한다.
+
+```java
+@GetMapping("/user/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("sessionedUser");
+		System.out.println("======== Success to LOGOUT!! ========");
+
+		return "redirect:/";
+}
+```
+
+---
+### 3-3) 자기 자신의 정보만 수정
+
+현재의 코드는 관리자처럼 모든 사용자의 정보를 다 바꿀 수 있도록 되어있다. 로그인을 한
+사용자에 한해서 본인의 정보만 수정할 수 있어야 한다. 이를 코드로 표현하면 아래와 같다.
+
+```java
+@GetMapping("/user/{id}/form")
+	public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
+		Object tempUser = session.getAttribute("sessionedUser");
+		if (tempUser == null) {
+			return "redirect:/user/loginForm";
+		}
+
+		User user = userRepository.findOne(id);
+		model.addAttribute("user", user);
+		return "/user/updateForm";
+}
+```
+
+session.getAttribute() 메소드를 사용하면, Object 로 객체를 받아오기 때문에,
+User tempUser 가 아닌, Object tempUser 로 받는 것이다.
+
+이렇게 수정하고 나면, 로그인 후에 정보를 수정하는것은 맞지만, 로그인 후 본인의 정보가 아닌
+타인의 정보도 변경할 수 있다. 이를 수정하면 아래와 같다.
+
+```java
+@GetMapping("/user/{id}/form")
+	public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
+		Object tempUser = session.getAttribute("sessionedUser");
+		if (tempUser == null) {
+			return "redirect:/user/loginForm";
+		}
+
+		User sessionedUser = (User)tempUser;
+//	if (!id.equals(sessionedUser.getId())) {
+//		throw new IllegalStateException("본인의 정보만 수정할 수 있습니다.");
+//	}
+
+		User user = userRepository.findOne(sessionedUser.getId());
+		model.addAttribute("user", user);
+		return "/user/updateForm";
+}
+```
+
+
+
+---
+### 3-4) 중복제거, clean code, 쿼리 보기 설정
+
+---
+### 3-5) 질문하기, 질문 목록 기능 구현
