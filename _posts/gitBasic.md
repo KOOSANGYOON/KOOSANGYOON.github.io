@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Git 기초부터 정리하7
-date: 2018-01-09T18:30:00.000Z
+title: Git 기초부터 정리하기
+date: 2018-07-09T18:30:00.000Z
 image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/integration-1777537_1920.jpg?raw=true'
 description: TIL
 category: TIL
