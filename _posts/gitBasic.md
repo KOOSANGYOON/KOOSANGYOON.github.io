@@ -1,0 +1,127 @@
+---
+layout: post
+title: Git 기초부터 정리하7
+date: 2018-01-09T18:30:00.000Z
+image: 'https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/integration-1777537_1920.jpg?raw=true'
+description: TIL
+category: TIL
+tags:
+  - TIL
+  - TOOL
+  - GIT
+twitter_text: Git 기본부터 정리하기
+introduction: Git 기본부터 정리하기
+---
+
+# Git 기초
+
+---
+## 기초 지식 / Git의 장단점
+
+- Linux 개발자인 Linus Benedict Torvalds(이하 리누스 토르발스)가 개발했다. 그는 기존 Version Control System(VCS)가 맘에 들지 않아 2주만에 개발을 완료했다.
+
+- Linux 오픈소스는 타 오픈소스에 비해 소스코드의 크기가 크고, 복잡하다는 특징이 있다. 따라서 굉장히 복잡한 Work Flow를 관리하기  쉽고, 대용량의 소스코드를 신속하게 업로딩할 수 있는 툴이 필요했나보다.
+
+- 장점
+  - 오프라인에서 사용이 가능하다.
+  - 성능(속도)이 매우 좋다.
+  - 브랜치 관리가 잘 된다. (== Work Flow 관리가 쉬워 협업에 유리하다.)
+
+- 단점
+  - 배우기가(사용하기가) 어렵다.
+
+---
+## Git 기본 명령어 설명
+
+- git add, commit
+- git reset
+- git revert
+- git checkout
+- git rebase
+- git merge
+- git push, pull, fetch, status
+
+---
+### Add, Commit
+
+![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/gitRepo2.png?raw=true)
+
+- add : Working tree에 있는 파일을 stage에 올리는 것.
+- commit : stage에 있는 `file들`을 `묶어서` Local 저장소에 `저장`하는 것
+  - commit의 결과로 1개의 commit이 생성된다.
+  - 생성된 커밋은 쉽게말해 내 Working Directory의 특정 시점(commit 한 시점)의 `SNAPSHOT`이라고 볼 수 있다.
+  ![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/commit.png?raw=true)
+  - 이처럼 Commit을 하면, 새로 생성된 Commit3은 HEAD가 가리키는 Commit2를 가리키게 되고, 바로 자신이 HEAD가 된다.
+
+---
+### Reset
+
+![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/git_reset_1.png?raw=true)
+
+- reset : Commit 4 의 이력이 사라지고, 되돌릴 수 없다. (물론 무조건 되돌릴 수 없다고 할 순 없다. 복구하는 방법은 있지만, 무조건 복구할 수 있는것은 아니므로 없다고 하겠다.)
+
+---
+### Revert
+
+![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/git_revert.png?raw=true)
+
+- revert : 목표가 되는 Commit을 현재 HEAD 이후에 복제한다.
+> 이 때문에 충돌이 나기 쉽다.
+
+---
+### Checkout
+
+![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/git_checkout.png?raw=true)
+
+- checkout : HEAD를 이동한다.
+  - 기본 form은 `git checkout <commit id>` 이지만, 우리는 `git checkout <branch 이름>` 으로 사용한다. 왜 그럴까?
+    > branch는 commit의 참조이기 때문이다.
+
+  - 그림에서 `*`이 의미하는 것은 그 브랜치가 HEAD라는 표시이다. 이 상태에서 checkout을 한 결과, HEAD가 Commit 2로 이동했다.
+
+  - checkout을 하면, HEAD가 변경되고, 나의 Working Directory가 HEAD가 이동한 Commit의 상태로 변경된다. (Commit은 특정 시점의 SNAPSHOT이라고 설명한 바 있다.)
+
+---
+### Rebase
+
+![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/git_rebase.png?raw=true)
+
+- rebase : 현재 브랜치를 목적 브랜치 아래에 복제하고, 기존의 브랜치는 삭제한다.
+  - 이와 같이 사용하면, 충돌이 빈번하게 일어나게 된다.
+  - 하지만, 한 라인으로 커밋 이력이 정리되기 때문에 보기에는 예뻐진다는 장점이 있다. (나머지 모든것이 단점인 것 같다..)
+
+---
+### Merge
+
+![Image](https://github.com/KOOSANGYOON/TIL/blob/master/TIL201807/git_merge.png?raw=true)
+
+- merge : 두 Commit 을 합해서 새로운 Commit 을 생성한다.
+
+---
+### Push, Pull, Fetch, Status
+
+- push : local 저장소에 있는 file들을 원격 저장소로 올리는 행위. (변동 사항만)
+  > 기본 form : git push <저장소 이름> <브랜치 이름>
+
+- pull : 2가지 작업을 실시한다.
+  - 원격 저장소에 있는 파일을 local 저장소로 가져온다.
+  - HEAD Commit과, 브랜치의 가장 최근 Commit을 `merge`한다.
+
+- fetch : 원격 저장소와 local 저장소를 동기화한다.
+  > local에 없는 Commit을 가져온다.
+
+- status : Working Directory와 Stage를 비교하여 다른 것을 보여준다.
+
+---
+## 실습해보기
+
+- Git 의 기본 명령어 및 사용법이 헷갈릴 때, 좋은 실습 사이트가 있다.
+  > 링크 : https://learngitbranching.js.org/
+
+---
+#### Git 정리 - 기초 를 마치며...
+
+- 기본적인 Working Directory / Stage / Local Repository 용어도 잘 알지 못하고 Git을 사용했던 나를 반성하게 되었다..
+
+- add / commit 시의 흐름(Git의 동작 원리)을 공부하면서, 어떤 간단한 프로그램이더라도 내부 동작 원리를 꼼꼼히 살펴봐야 한다는 깨달음을 얻었다.
+  > 앞으로 간단하게나마 내가 직접 짤 수 있을 정도로 동작원리를 알아보자.
